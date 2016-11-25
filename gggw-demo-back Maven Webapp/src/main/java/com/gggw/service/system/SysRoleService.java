@@ -45,6 +45,13 @@ public class SysRoleService {
 	}
 	
 	/**
+	 * 获取全部
+	 */
+	public List<BaseRole> getAll() throws Exception{
+		return (List<BaseRole>) dao.findForList("BaseRoleMapper.selectAll", null);
+	}
+	
+	/**
 	 * 分页查询
 	 */
 	public List<BaseRole> selectByRolePage(Map<String, String> params) throws Exception{

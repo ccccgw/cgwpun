@@ -203,6 +203,11 @@
   			$(window).bind('hashchange', function () {
 	    		hashChange();
 			}); 
+			
+			$('#side-menu a').click(function(){
+				$('#side-menu a').removeClass("active");
+    			$(this).addClass("active"); 
+			});	
   		});
   
   		//使用ajax的方式跳转  避免重复刷新菜单和顶部栏
@@ -216,12 +221,14 @@
   			if (!title) {
   				title = obj;
   			}
+  			$("#page-wrapper").html('<h1>页面加载中...</h1>');
   			$.ajax({
   				type : "GET",
   				url : completeUrl+"?rnd=" + new Date().getTime(),
   				dataType : "text",
   				data : params,
          		success : function(data) {
+         			debugger
          			//修改title
          			$(document).attr("title", title);
          			//修改地址

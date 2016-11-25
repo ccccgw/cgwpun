@@ -91,17 +91,13 @@
                                             	</c:forEach>
                                             </select>
                                         </div>
-                                        <div class="form-group has-feedback">
+                                        <div class="form-group has-feedback" name="roleIds">
                                             <div><label>请选择角色</label></div>
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox">系统管理员
-                                            </label>
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox">操作员
-                                            </label>
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox">用户
-                                            </label>
+                                            <c:forEach items="${roleList}" var="item">
+                                            	<label class="checkbox-inline">
+                                                	<input type="checkbox" name="roleId" value="${item.roleId}" <c:if test="${fn:contains(baseSysUser.roleId, item.roleId)}">checked</c:if>>${item.roleName}
+                                            	</label>
+                                            </c:forEach>
                                         </div>
 
 										<div hidden>
@@ -172,7 +168,7 @@
 			showError(validateEmail(email));
 			return;
 		}
-
+		debugger;
 		var url = "${contextPath }/ajaxUserEdit"
 		var params = $("#userForm").serializeArray();
 

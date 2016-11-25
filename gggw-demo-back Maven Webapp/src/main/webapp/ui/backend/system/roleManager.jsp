@@ -78,6 +78,7 @@
             serverSide      :       true,                  //启用服务器端分页
             renderer        :       "bootstrap",            //渲染样式：Bootstrap和jquery-ui
             searching       :       false,                 //禁用原生搜索
+            processing		: 		true,  					//加载提示
             //order			: 		[],          			//取消默认排序查询,否则复选框一列会出现小箭头
             ordering		: 		false,					//这地方true的话css冲突了.sorting这个class冲突 
            	//scrollY			: 		500,					//表格高度，去掉的话   会自适应。

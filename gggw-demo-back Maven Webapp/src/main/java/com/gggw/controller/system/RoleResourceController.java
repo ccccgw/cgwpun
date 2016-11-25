@@ -129,9 +129,9 @@ public class RoleResourceController extends BaseController{
 		PageData requestParam = this.getPageData();
 		String[] resources = requestParam.getString("resources").split(",");
 		try {
-			baseRole = sysRoleService.findByCode(baseRole);
+			BaseRole baseRoleExist = sysRoleService.findByCode(baseRole);
 			if ("0".equals(operatType)) {
-				if (null != baseRole) {
+				if (null != baseRoleExist) {
 					sisapResult.setError_no("1");
 					sisapResult.setError_info("已存在");
 					return sisapResult;
@@ -141,7 +141,7 @@ public class RoleResourceController extends BaseController{
 				updateRoleResource(resources, baseRole);
 				sisapResult.setError_info("添加成功!");
 			} else {
-				if (null == baseRole) {
+				if (null == baseRoleExist) {
 					sisapResult.setError_no("1");
 					sisapResult.setError_info("该角色不存在");
 					return sisapResult;

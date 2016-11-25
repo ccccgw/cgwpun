@@ -6,8 +6,10 @@ import javax.validation.Valid;
 import com.gggw.entity.PageForm;
 import com.gggw.entity.Paginator;
 import com.gggw.entity.system.BaseDictionary;
+import com.gggw.entity.system.BaseRole;
 import com.gggw.entity.system.BaseSysUser;
 import com.gggw.result.SisapResult;
+import com.gggw.service.system.SysRoleService;
 import com.gggw.service.system.SysUserService;
 
 import com.gggw.util.PageData;
@@ -42,6 +44,8 @@ public class UserController extends BaseController{
 	@Resource(name="sysUserService")
 	private SysUserService sysUserService;
 	@Autowired
+	private SysRoleService sysRoleService;
+	@Autowired
 	private BaseDictionaryCache baseDictionaryCache;
 
 	/**
@@ -51,9 +55,9 @@ public class UserController extends BaseController{
 	public ModelAndView toUser()throws Exception{
 		ModelAndView modelAndView = new ModelAndView();		
 		List<BaseDictionary> statusList = baseDictionaryCache.getDictionaryList("1000");
-		List<BaseDictionary> genderList = baseDictionaryCache.getDictionaryList("1100");
+		List<BaseDictionary> genderList = baseDictionaryCache.getDictionaryList("1100");		
 		modelAndView.addObject("statusList", statusList);
-		modelAndView.addObject("genderList", genderList);
+		modelAndView.addObject("genderList", genderList);		
 		modelAndView.setViewName("ui/backend/system/userManager");
 		return modelAndView;
 	}
@@ -67,8 +71,10 @@ public class UserController extends BaseController{
 		modelAndView.addObject("operatType", operatType);
 		List<BaseDictionary> statusList = baseDictionaryCache.getDictionaryList("1000");
 		List<BaseDictionary> genderList = baseDictionaryCache.getDictionaryList("1100");
+		List<BaseRole> roleList = (List<BaseRole>) sysRoleService.getAll();				// temporary_最好使用cache的形式，baseRole总新增listResource属性
 		modelAndView.addObject("statusList", statusList);
 		modelAndView.addObject("genderList", genderList);
+		modelAndView.addObject("roleList", roleList);
 		if ("1".equals(operatType)) {
 			baseSysUser = sysUserService.findByUserId(baseSysUser.getUserId());
 			modelAndView.addObject("baseSysUser", baseSysUser);
