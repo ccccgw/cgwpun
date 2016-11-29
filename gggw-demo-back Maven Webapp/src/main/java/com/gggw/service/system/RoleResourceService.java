@@ -51,4 +51,12 @@ public class RoleResourceService {
 	public void deleteByRoleId(int roleId) throws Exception{
 		dao.delete("BaseRoleResourceMapper.deleteByRoleId", roleId);
 	}
+	
+
+	/**
+	 * 获取所有
+	 */
+	public List<BaseRoleResource> getAll() throws Exception{
+		return (List<BaseRoleResource>)dao.findForList("BaseRoleResourceMapper.selectAll", null);
+	}
 }

@@ -32,6 +32,7 @@ import com.gggw.util.PageData;
 import com.gggw.util.jedis.RedisClientUtil;
 import com.gggw.controller.base.BaseController;
 import com.gggw.core.annotation.NoLogin;
+import com.gggw.core.cache.SysRoleCache;
 import com.gggw.core.factory.impl.CounterServiceFactory;
 import com.gggw.core.utils.CookieUtil;
 import com.gggw.core.utils.FastJsonUtil;
@@ -78,6 +79,8 @@ public class LoginController extends BaseController{
 	private CounterServiceFactory counterFactory;
 	@Autowired
 	private IImageCodeService verifyCodeService;
+	@Autowired
+	private SysRoleCache sysRoleCache;
 	
 	/**
 	 * 主页
@@ -237,42 +240,12 @@ public class LoginController extends BaseController{
 	public Object getMenuList(){
         StringBuilder menuHtml = new StringBuilder();
 		try {
-			List<BaseResource> menus = sysResourceService.getKidResources(0);
-            menuHtml.append(getChildMenuHtml(menus));
+			menuHtml.append(sysRoleCache.getMenu("10000"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return menuHtml.toString();
 	}
-
-	public String build (BaseResource menu, List<BaseResource> childMenus) throws Exception{
-        StringBuilder childHtml = new StringBuilder();
-        if (childMenus.size() > 0) {
-            childHtml.append("<ul class=\"nav " + menu.getClassStyle() + "\">");
-            childHtml.append(getChildMenuHtml(childMenus));
-            childHtml.append("</ul>");
-        }
-        return childHtml.toString();
-    }
-
-    public String getChildMenuHtml(List<BaseResource> menus) throws Exception{
-        StringBuilder menuHtml = new StringBuilder();
-        for (BaseResource menu : menus) {
-            List<BaseResource> childMenus = sysResourceService.getKidResources(menu.getResourceId());
-            if(childMenus.size() > 0 ){
-                menuHtml.append("<li><a href=\"#\"><i class=\"fa " + menu.getIcon() + " fa-fw\"></i> " + menu.getResourceName() + "<span class=\"fa arrow\"></span></a>");
-                menuHtml.append(build(menu, childMenus));
-                menuHtml.append("</li>");
-            } else {
-                String url = "";
-                if (StringUtils.isNotBlank(menu.getUrlInner())) {
-                    url = menu.getUrlInner();
-                }
-                menuHtml.append("<li><a onclick=\"toPage(this, '"+ url +"')\"><i class=\"fa " + menu.getIcon() + " fa-fw\"></i> " + menu.getResourceName() + "</a></li>");
-            }
-        }
-        return menuHtml.toString();
-    }
 	//=========================================  tool Functions  start  ===========================================//
 	
 	/**       

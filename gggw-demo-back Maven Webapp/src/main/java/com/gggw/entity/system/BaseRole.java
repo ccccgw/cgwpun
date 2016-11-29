@@ -1,5 +1,8 @@
 package com.gggw.entity.system;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BaseRole {
     private Integer roleId;
 
@@ -7,7 +10,17 @@ public class BaseRole {
 
     private String roleName;
 
-    private String memo;
+	private String memo;
+    
+    private List<BaseResource> baseResourceList = new ArrayList<BaseResource>();
+    
+    public List<BaseResource> getBaseResourceList() {
+		return baseResourceList;
+	}
+
+	public void setBaseResourceList(List<BaseResource> baseResourceList) {
+		this.baseResourceList = baseResourceList;
+	}
 
     public Integer getRoleId() {
         return roleId;
