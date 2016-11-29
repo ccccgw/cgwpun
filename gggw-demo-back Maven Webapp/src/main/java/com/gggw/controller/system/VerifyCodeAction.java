@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gggw.controller.base.BaseController;
+import com.gggw.core.annotation.NoLogin;
 import com.gggw.core.utils.CookieUtil;
 import com.gggw.system.service.IImageCodeService;
 
@@ -27,12 +29,13 @@ import com.gggw.system.service.IImageCodeService;
  * @see 	 
  */
 @Controller
-public class VerifyCodeAction {
+public class VerifyCodeAction extends BaseController{
 	@Autowired
 	private IImageCodeService verifyCodeService;
 	
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(VerifyCodeAction.class);
 	
+	@NoLogin
 	@RequestMapping("imageCode.img")
 	public void verifyCode(HttpServletRequest request, HttpServletResponse response) {
 		String verifyCode="";
@@ -45,8 +48,8 @@ public class VerifyCodeAction {
 			/**
 			 * 这里测试用，如果没有cookie的话则设置cookie
 			 */
-			if (null == CookieUtil.getCookie(request, CookieUtil.COOKIE_GGGW_SESSION_ID)) {
-				sessionId = UUID.randomUUID().toString();
+			if (null == sessionId) {
+				sessionId = get32UUID();
 				CookieUtil.setCookie(response, CookieUtil.COOKIE_GGGW_SESSION_ID, sessionId, true);
 			}		
 			

@@ -39,7 +39,7 @@ public class ImageCodeServiceImpl implements IImageCodeService{
 	// 图片的宽度
 	private final static int IMAGEWIDTH = 20;
 	// 图片的高度
-	private final static int IMAGEHEIGHT = 35;
+	private final static int IMAGEHEIGHT = 34;
 
 	// 字体大小
 	private final static int FONTSIZE = 22;

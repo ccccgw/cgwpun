@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gggw.entity.system.BaseResource;
-import com.gggw.result.SisapResult;
 import com.gggw.service.system.SysResourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ import com.gggw.core.cache.SysRoleCache;
 import com.gggw.core.factory.impl.CounterServiceFactory;
 import com.gggw.core.utils.CookieUtil;
 import com.gggw.core.utils.FastJsonUtil;
-import com.gggw.core.utils.RequestUtil;
 import com.gggw.counter.service.feature.CounterService0002;
 import com.gggw.entity.system.BaseSysUser;
 import com.gggw.service.system.SysUserService;
@@ -55,8 +53,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @see 	 
  */
 
-@Controller
-public class LoginController extends BaseController{
+//@Controller
+public class LoginControllerTest extends BaseController{
 	
 	/**
 	 * @Resource  
@@ -85,33 +83,28 @@ public class LoginController extends BaseController{
 	private SysRoleCache sysRoleCache;
 	
 	/**
-	 * 主页A
+	 * 主页
 	 */
+	@NoLogin
 	@RequestMapping(value="toHomeA")
 	@ResponseBody
-	public ModelAndView toHomeA(BaseSysUser user, HttpServletRequest request, HttpServletResponse response)throws Exception{
-		user = getUser();
+	public ModelAndView toHomeA(HttpServletRequest request, HttpServletResponse response)throws Exception{
 		ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("menuHtml", getMenuList(user));
+		//modelAndView.setViewName("ui/back/login");
+        modelAndView.addObject("menuHtml", getMenuList());
+        System.out.println(getMenuList());
         modelAndView.setViewName("ui/backend/index");
 		return modelAndView;
 	}
 	
 	/**
-	 * 登录页A
+	 * 登录页
 	 */
 	@NoLogin
 	@RequestMapping(value="toLoginA")
 	@ResponseBody
 	public ModelAndView toLoginA(HttpServletRequest request, HttpServletResponse response)throws Exception{
-		ModelAndView modelAndView = new ModelAndView();	
-		BaseSysUser user = getUser();
-		//设置sessionId
-		String sessionId= CookieUtil.getCookie(request, CookieUtil.COOKIE_GGGW_SESSION_ID);
-		if (null == sessionId) {
-			sessionId = get32UUID();
-			CookieUtil.setCookie(response, CookieUtil.COOKIE_GGGW_SESSION_ID, sessionId, true);
-		}	
+		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("ui/backend/login");
 		return modelAndView;
 	}
@@ -160,60 +153,148 @@ public class LoginController extends BaseController{
 		map.put("regist_user_no", RedisClientUtil.get("502269006@qq.com"));
 		return FastJsonUtil.toJSONString(map);
 	}
-
-	//=========================================  ajaxFunction  start  ===========================================//
+	
+	/**
+	 * 测试cookie
+	 */
+	@RequestMapping(value="cookieTest")
+	@ResponseBody
+	public Object cookieTest(HttpServletRequest request)throws Exception{
+		Map<String,String> map = new HashMap<String,String>();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String cookieString = CookieUtil.getCookie(request, CookieUtil.COOKIE_GGGW_SESSION_ID);
+		map.put("cookie_string", cookieString);
+		return FastJsonUtil.toJSONString(map);
+	}
+	
+	/**
+	 * 校验验证码
+	 */
+	@RequestMapping(value="checkCookie")
+	@ResponseBody
+	public Object checkCookie(HttpServletRequest request)throws Exception{
+		Map<String,String> map = new HashMap<String,String>();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		if (verifyCodeService.checkVerifycode(pd.getString("verify_code"), CookieUtil.getCookie(request, CookieUtil.COOKIE_GGGW_SESSION_ID))) {
+			map.put("result_info", "正确");
+		} else {
+			map.put("result_info", "错误");
+		}
+		
+		
+		return FastJsonUtil.toJSONString(map);
+	}
+	
+	/**
+	 * 测试bean写入cookie
+	 */
+	@RequestMapping(value="setBeanCookie")
+	@ResponseBody
+	public Object setBeanCookie(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		Map<String,String> map = new HashMap<String,String>();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		BaseSysUser baseSysUser = new BaseSysUser();
+		baseSysUser.setUserName("setBeanCookie");
+		baseSysUser.setUserNo("123123");
+		baseSysUser.setUserPwd("ggggw");
+		
+		CookieUtil.writeObject(request, response, "Base_sys_user_session", baseSysUser);
+		map.put("result_info", "已设置");
+		return FastJsonUtil.toJSONString(map);
+	}
+	
+	/**
+	 * 测试cookie读取bean
+	 */
+	@RequestMapping(value="getBeanCookie")
+	@ResponseBody
+	public Object getBeanCookie(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		Map<String,String> map = new HashMap<String,String>();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		BaseSysUser baseSysUser = (BaseSysUser) CookieUtil.readObject(request, "Base_sys_user_session", BaseSysUser.class);
+		map.put("result_info", FastJsonUtil.toJSONString(baseSysUser));
+		return FastJsonUtil.toJSONString(map);
+	}
+	
 	
 	/**
 	 * 请求登录，验证用户
 	 */
 	@NoLogin
-	@RequestMapping(value="ajaxSubmitLogin")
-	@ResponseBody
-	public Object ajaxSubmitLogin(BaseSysUser loginUser, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		SisapResult sisapResult = new SisapResult("0", "登录成功!");
-		String ipAddress = RequestUtil.getIpAddress(request);
-		PageData pd = this.getPageData();
-		Boolean verifyCodeFlag = verifyCodeService.checkVerifycode(pd.getString("verifyCode"), CookieUtil.getCookie(request, CookieUtil.COOKIE_GGGW_SESSION_ID));
-		if (verifyCodeFlag) {
-			BaseSysUser baseSysUser = sysUserService.checkLogin(loginUser);
-			if (null != baseSysUser) {
-				//problem_ 状态判断最好用switch的形式  这里需要用到字典
-				if ( sysUserService.checkStatus(baseSysUser) ) {
-					baseSysUser.setLoginIps(ipAddress);
-					sysUserService.updateUser(baseSysUser);
-					request.setAttribute(CookieUtil.GGGW_USER_SESSION_ID, baseSysUser);
-					//problem_ why 这里需要再写一遍不然会出错。 
-					CookieUtil.writeObject(request, response, CookieUtil.GGGW_USER_SESSION_ID, baseSysUser);
-				} else {
-					sisapResult.setError_no("3");
-					sisapResult.setError_info("用户非正常状态");
-				}				
-			} else {
-				sisapResult.setError_no("2");
-				sisapResult.setError_info("用户名密码错误!请重新输入。");
-			}
-		} else {
-			sisapResult.setError_no("1");
-			sisapResult.setError_info("验证码错误!");
-		}
-		
-		return sisapResult;
+	@RequestMapping(value="toHome")
+	public ModelAndView toHome(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("ui/back/included");
+		return modelAndView;
 	}
-    
-	//=========================================  ajaxFunction  end  =============================================//
-	
-	
+
 	/**
 	 * 菜单资源获取
 	 */
-	public Object getMenuList(BaseSysUser user){
+	@NoLogin
+	@RequestMapping(value="getMenuList")
+	public Object getMenuList(){
         StringBuilder menuHtml = new StringBuilder();
 		try {
-			menuHtml.append(sysRoleCache.getMenu(user.getRoleId()));
+			menuHtml.append(sysRoleCache.getMenu("10000"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return menuHtml.toString();
 	}
+	//=========================================  tool Functions  start  ===========================================//
+	
+	/**       
+     * 描述:获取 post 请求内容 
+     * <pre> 
+     * 举例： 
+     * </pre> 
+     * @param request 
+     * @return 
+     * @throws IOException       
+     */  
+    public static String getRequestPostStr(HttpServletRequest request)  
+            throws IOException {  
+        byte buffer[] = getRequestPostBytes(request);  
+        String charEncoding = request.getCharacterEncoding();  
+        if (charEncoding == null) {  
+            charEncoding = "UTF-8";  
+        }  
+        return new String(buffer, charEncoding);  
+    }  
+
+    /**       
+     * 描述:获取 post 请求的 byte[] 数组 
+     * <pre> 
+     * 举例： 
+     * </pre> 
+     * @param request 
+     * @return 
+     * @throws IOException       
+     */  
+    public static byte[] getRequestPostBytes(HttpServletRequest request)  
+            throws IOException {  
+        int contentLength = request.getContentLength();  
+        if(contentLength<0){  
+            return null;  
+        }  
+        byte buffer[] = new byte[contentLength];  
+        for (int i = 0; i < contentLength;) {  
+  
+            int readlen = request.getInputStream().read(buffer, i,  
+                    contentLength - i);  
+            if (readlen == -1) {  
+                break;  
+            }  
+            i += readlen;  
+        }  
+        return buffer;  
+    }  
+    
+	//=========================================  tool Functions  end  ===========================================//
 }
 

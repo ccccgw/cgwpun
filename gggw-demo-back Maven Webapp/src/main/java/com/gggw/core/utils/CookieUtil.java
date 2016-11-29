@@ -265,6 +265,9 @@ public class CookieUtil {
 				}
 				// 2.组装切片
 				String base64Str = ParamUtil.mergeParam(key, params);
+				if(StringUtils.isBlank(base64Str)) {
+					return null;
+				}
 				// 3.解码
 				byte[] buffer = Base64.decodeBase64(base64Str);
 				// 4.解密
@@ -274,6 +277,7 @@ public class CookieUtil {
 			} 	
 		} catch (Exception e) {
 			logger.error("cookie转为对象失败", e);
+			return null;
 		}
 		
 		return null;

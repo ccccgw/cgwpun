@@ -33,6 +33,16 @@
 			<bean class="com.gggw.interceptor.FlowInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
+	
+	<!-- problem_  -->
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="customArgumentResolvers">
+			<list>
+				<ref bean="userArgumentResolver" />
+			</list>
+		</property>
+	</bean>
 	 
 	<!-- 配置SpringMVC的视图解析器 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

@@ -15,7 +15,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gggw.core.utils.CookieUtil;
 import com.gggw.entity.Page;
+import com.gggw.entity.system.BaseSysUser;
 import com.gggw.util.Logger;
 import com.gggw.util.PageData;
 import com.gggw.util.UuidUtil;
@@ -53,8 +55,7 @@ public class BaseController {
 	 * 得到request对象
 	 */
 	public HttpServletRequest getRequest() {
-		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();		
 		return request;
 	}
 
@@ -65,6 +66,13 @@ public class BaseController {
 	public String get32UUID(){
 		
 		return UuidUtil.get32UUID();
+	}
+	
+	/**
+	 * 得到user
+	 */
+	public BaseSysUser getUser(){
+		return (BaseSysUser) getRequest().getAttribute(CookieUtil.GGGW_USER_SESSION_ID);
 	}
 	
 	/**

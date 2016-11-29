@@ -1,9 +1,13 @@
 package com.gggw.interceptor;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
@@ -12,6 +16,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import com.gggw.core.annotation.NoLogin;
+import com.gggw.core.exception.BizException;
+import com.gggw.core.utils.CookieUtil;
+import com.gggw.entity.system.BaseSysUser;
 
 /**
  * 
@@ -47,8 +54,6 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 		 * 				5.其他登录逻辑
 		 */
 		
-		
-		
 		/** 静态资源请求 不做拦截*/
 		if (handler.getClass().equals(ResourceHttpRequestHandler.class)) {
 			return true;
@@ -70,10 +75,19 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 			return true;
 		}
 		
+		prepareSessionFromCookie(request);
+			
+		BaseSysUser user = (BaseSysUser)request.getAttribute(CookieUtil.GGGW_USER_SESSION_ID);
+		if (user != null) {
+			if(checkUser(user)){
+				return true;
+			}
+		}
 		
 		System.out.println("LoginHandlerInterceptor  preHandle()===========登录拦截");
 		
 		return true;
+		//throw new BizException("1", "拦截了");
 	}
 	
 	
@@ -87,7 +101,7 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 		 * 1.读取request   user = request.getAttribute(sessionName);
 		 * 2.把user写入cookie
 		 */
-		
+		updateSessionToCookie(request, response);
 		System.out.println("LoginHandlerInterceptor  postHandle()===========");
 	}
 	
@@ -102,5 +116,45 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 		
 		System.out.println("LoginHandlerInterceptor  afterCompletion()===========");
 		
+	}
+	
+	/**
+	 * 解析request中的cookie，转化为session中的user
+	 * @param request
+	 * @throws Exception
+	 */
+	protected void prepareSessionFromCookie(HttpServletRequest request) throws Exception {
+		String sessionName = CookieUtil.GGGW_USER_SESSION_ID;
+		BaseSysUser user = (BaseSysUser) CookieUtil.readObject(request, sessionName, BaseSysUser.class);
+		if (user == null) {
+			user = new BaseSysUser();
+		}
+		request.setAttribute(sessionName, user);
+	}
+	
+	/**
+	 * 检查 user 是否有效
+	 * @param user
+	 * @return
+	 */
+	private boolean checkUser(BaseSysUser user) {
+		if (user == null || StringUtils.isBlank(user.getUserNo())) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 更新session中的user到cookie
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	protected void updateSessionToCookie(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String sessionName = CookieUtil.GGGW_USER_SESSION_ID;
+		BaseSysUser user = (BaseSysUser)request.getAttribute(sessionName);
+		if (user != null && StringUtils.isNotEmpty(user.getUserNo())) {
+			CookieUtil.writeObject(request, response, sessionName, user);
+		}
 	}
 }

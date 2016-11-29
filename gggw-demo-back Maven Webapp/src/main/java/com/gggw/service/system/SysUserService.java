@@ -12,8 +12,11 @@ package com.gggw.service.system;
 import javax.annotation.Resource;
 
 import com.gggw.entity.system.BaseSysUser;
+import com.gggw.result.SisapResult;
+
 import org.springframework.stereotype.Service;
 
+import com.gggw.core.utils.AESUtil;
 import com.gggw.dao.DaoSupport;
 
 import java.util.List;
@@ -96,6 +99,31 @@ public class SysUserService {
 	 */
 	public void updateUser(BaseSysUser baseSysUser) throws Exception{
 		dao.findForObject("BaseSysUserMapper.updateByPrimaryKey", baseSysUser);
+	}
+	
+	//========================================    以下为业务逻辑方法       =========================================================//
+	
+	/**
+	 * 验证用户登录
+	 */
+	public BaseSysUser checkLogin(BaseSysUser loginUser) throws Exception{
+		BaseSysUser baseSysUser = findByUserNo(loginUser);
+		String password = baseSysUser.getUserPwd();
+		String loginPasswordString = AESUtil.encrypt(loginUser.getUserPwd(), loginUser.getUserNo()+"nmb");
+		if (password.equals(loginPasswordString)) {
+			return baseSysUser;	
+		} 
+		return null;		
+	}
+	
+	/**
+	 * 检查用户状态
+	 */
+	public boolean checkStatus(BaseSysUser user) throws Exception{
+		if(user.getStatus() == 8) {
+			return true;
+		}
+		return false;
 	}
 }
 
