@@ -101,7 +101,7 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 		 * 1.读取request   user = request.getAttribute(sessionName);
 		 * 2.把user写入cookie
 		 */
-		updateSessionToCookie(request, response);
+		//updateSessionToCookie(request, response);
 		System.out.println("LoginHandlerInterceptor  postHandle()===========");
 	}
 	
