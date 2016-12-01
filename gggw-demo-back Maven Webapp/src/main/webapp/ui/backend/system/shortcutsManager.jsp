@@ -41,6 +41,76 @@
                     </div>
                     <!-- /.panel -->
                 </div>
+                
+                <div class="col-lg-6">
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            	关于  Font-Awesome 的整理
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <i class="fa fa-weixin "></i>
+                            <i class="fa fa-weixin fa-lg"></i>
+                            <i class="fa fa-tag fa-2x pull-left "></i>
+                            <i class="fa fa-tag fa-2x pull-right "></i>
+                            <i class="fa fa-spin fa-2x  fa-arrow-right"></i>
+                            <i class="fa fa-spin fa-2x fa-spinner fa-pulse"></i>
+                            <ul>
+						        <li><i class="fa fa-hand-o-up  "></i>手:默认状况</li>
+						        <li><i class="fa fa-hand-o-up fa-rotate-90 "></i>手:旋转90度</li>
+						        <li><i class="fa fa-hand-o-up fa-rotate-180 "></i>手:旋转180度</li>
+						        <li><i class="fa fa-hand-o-up fa-rotate-270"></i>手:旋转270度</li>
+						        <li><i class="fa fa-hand-o-up fa-flip-horizontal "></i>手:水平(90%)</li>
+						        <li><i class="fa fa-hand-o-up fa-flip-vertical "></i>手:垂直(180%)</li>
+						    </ul>
+						    
+						    <div class="icon-test-lise">
+						      <h1>堆叠图标:合并图形</h1>
+						      <ul>
+						        <li>
+						          <span class="fa-stack">
+						            <i class="fa fa-stack-2x  fa-bookmark-o"></i>
+						            <i class="fa fa-stack-1x  fa-child"></i>
+						          </span>随便找的两个图标合成
+						        </li>
+						        <li>
+						          <span class="fa-stack">
+						            <i class="fa fa-stack-2x  fa-lemon-o"></i>
+						            <i class="fa fa-stack-1x  fa-chain "></i>
+						          </span>随便找的两个图标合成
+						        </li>
+						        <li>
+						          <span class="fa-stack">
+						            <i class="fa fa-stack-2x fa-wheelchair"></i>
+						            <i class="fa fa-stack-1x fa-transgender-alt"></i>
+						          </span>随便找的两个图标合成
+						        </li>
+						        <li>
+						          <span class="fa-stack fa-2x">
+						            <i class="fa fa-stack-1x  fa-comment"></i>
+						            <i class="fa fa-stack-2x  fa-linux"></i>
+						          </span>随便找的两个图标合成
+						        </li>
+						        <li>
+						          <span class="fa-stack fa-3x">
+						            <i class="fa fa-stack-1x   fa-chain"></i>
+						            <i class="fa fa-stack-2x  fa-circle-o "></i>
+						          </span>随便找的两个图标合成
+						        </li>
+						        <li>
+						          <span class="fa-stack fa-lg">
+						              <i class="fa fa-circle fa-stack-2x"></i>
+						              <i class="fa fa-flag fa-stack-1x fa-inverse"></i>
+						            </span>随便找的两个图标合成
+						        </li>
+						      </ul>
+						    </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
             </div>
             <!-- /.row -->
          

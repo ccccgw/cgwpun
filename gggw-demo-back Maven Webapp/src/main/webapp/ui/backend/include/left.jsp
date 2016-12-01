@@ -15,7 +15,7 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="${contextPath }/toLoginA"><i class="fa fa-dashboard fa-fw"></i> Home</a>
+                            <a href=""><i class="fa fa-dashboard fa-fw"></i> Home</a>
                         </li>
                         ${menuHtml}
                     </ul>
