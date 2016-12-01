@@ -228,7 +228,6 @@
   				dataType : "text",
   				data : params,
          		success : function(data) {
-         			debugger
          			//修改title
          			$(document).attr("title", title);
          			//修改地址

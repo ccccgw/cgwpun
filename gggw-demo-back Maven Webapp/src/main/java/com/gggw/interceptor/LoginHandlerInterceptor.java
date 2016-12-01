@@ -86,8 +86,8 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 		
 		System.out.println("LoginHandlerInterceptor  preHandle()===========登录拦截");
 		
-		return true;
-		//throw new BizException("1", "拦截了");
+		//return true;
+		throw new BizException("1", "拦截了");
 	}
 	
 	
@@ -101,7 +101,7 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
 		 * 1.读取request   user = request.getAttribute(sessionName);
 		 * 2.把user写入cookie
 		 */
-		//updateSessionToCookie(request, response);
+		updateSessionToCookie(request, response);
 		System.out.println("LoginHandlerInterceptor  postHandle()===========");
 	}
 	

@@ -98,7 +98,7 @@
                     <a href="${contextPath }/toLogin">little thing</a>
                 </li>
                 <li>
-                    <a href="${contextPath }/toHomeA">Setting</a>
+                    <a href="${contextPath }/toLoginA">Setting</a>
                 </li>
             </ul>
         </div>

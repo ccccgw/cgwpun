@@ -35,11 +35,32 @@ function valChange(obj) {
     $(obj).removeAttr("oninput");
 }
 
-//错误提示
+//错误提示Alert
 function showError(errorModelBody) {
     BootstrapDialog.alert({
         title: "温馨提示",
         message: errorModelBody
+    });
+}
+//错误提示confirm
+function showConfirm(confirmBody,confirmFn) {
+	BootstrapDialog.show({
+		title:"温馨提示",
+        message: confirmBody,
+        buttons: [
+        {
+            label: '确定',
+            cssClass: 'btn-primary',
+            action: function(dialogItself){
+            	dialogItself.close();
+            	confirmFn();
+            }
+        }, {
+            label: '取消',
+            action: function(dialogItself){
+                dialogItself.close();
+            }
+        }]
     });
 }
 

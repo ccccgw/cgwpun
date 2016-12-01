@@ -12,6 +12,7 @@ import com.gggw.result.SisapResult;
 import com.gggw.service.system.SysRoleService;
 import com.gggw.service.system.SysUserService;
 
+import com.gggw.util.DateUtil;
 import com.gggw.util.PageData;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,7 @@ public class UserController extends BaseController{
 	@ResponseBody
 	public Object ajaxUserEdit(BaseSysUser baseSysUser, @RequestParam("operatType") String operatType) {
 		SisapResult sisapResult = new SisapResult("0", "");
+		BaseSysUser operator = getUser();
 		try {
 			
 			if ("0".equals(operatType)) {
@@ -121,6 +123,8 @@ public class UserController extends BaseController{
 					return sisapResult;
 				}
 				baseSysUser.setUserPwd(AESUtil.encrypt(baseSysUser.getUserPwd(), baseSysUser.getUserNo()+"nmb"));
+				baseSysUser.setCreateDate(DateUtil.getTime());
+				baseSysUser.setCreateBy(operator.getUserId());
 				sysUserService.addUser(baseSysUser);
 				sisapResult.setError_info("添加成功!");
 			} else {
@@ -130,6 +134,8 @@ public class UserController extends BaseController{
 					sisapResult.setError_info("该用户不存在");
 					return sisapResult;
 				}
+				baseSysUser.setUpdateDate(DateUtil.getTime());
+				baseSysUser.setUpdateBy(operator.getUserId());
 				sysUserService.updateUser(baseSysUser);
 				sisapResult.setError_info("修改成功!");
 			}
@@ -149,7 +155,6 @@ public class UserController extends BaseController{
 	@ResponseBody
 	public Object ajaxUserDel() {
 		SisapResult sisapResult = new SisapResult("0", "删除成功!");
-		BaseSysUser baseSysUser = new BaseSysUser();
 		try {
 			PageData requestParam = this.getPageData();
 			int userId = Integer.parseInt(requestParam.get("userId").toString());
