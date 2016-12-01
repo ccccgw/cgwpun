@@ -109,8 +109,9 @@
                 //不使用render，改用jquery文档操作呈现单元格
                 var $btnEdit =   $('<button type="button" class="btn btn-sm btn-primary btn-edit " >修改</button>  ');
                 var $btnDel  =   $('<button type="button" class="btn btn-sm btn-danger btn-del " >删除</button>');
+                var $other = $('<div class="btn-group"><button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">其他 <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li><a href="#">操作1</a></li><li><a href="#">操作2</a></li><li><a href="#">操作3</a></li><li class="divider"></li><li><a href="#">终极操作</a></li></ul></div>');
                 $('td', row).eq(2).text("");
-                $('td', row).eq(2).append($btnEdit).append("  ").append($btnDel);
+                $('td', row).eq(2).append($btnEdit).append("  ").append($btnDel).append("  ").append($other);
             }
         }));
         
