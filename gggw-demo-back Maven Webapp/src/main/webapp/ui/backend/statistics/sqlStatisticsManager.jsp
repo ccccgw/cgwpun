@@ -127,7 +127,7 @@
 		}
 		
 		//定时任务每秒刷新
-		setInterval("renderView()", 30 * 60 * 1000);
+		setInterval("renderView()", 5 * 1000);
 		
 		sqlViewBar.on('click', function (params) {
 				 var index = parseInt(params.name.substr(2));

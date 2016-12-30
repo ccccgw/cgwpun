@@ -59,8 +59,8 @@ public class MyExceptionResolver extends AbstractHandlerExceptionResolver{
 		//记录错误日志。
 		logger.error("Catch Exception: ",ex);
 		ex.printStackTrace();		
-		ModelAndView mv = new ModelAndView("error");
-		mv.addObject("exception", ex.toString().replaceAll("\n", "<br/>"));
+		ModelAndView mv = new ModelAndView("ui/backend/login");
+		//mv.addObject("exception", ex.toString().replaceAll("\n", "<br/>"));
 		return mv;
 	}
 

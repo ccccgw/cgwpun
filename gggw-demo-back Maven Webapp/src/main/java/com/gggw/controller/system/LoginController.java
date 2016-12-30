@@ -88,7 +88,6 @@ public class LoginController extends BaseController{
 	 * 主页A
 	 */
 	@RequestMapping(value="toHomeA")
-	@ResponseBody
 	public ModelAndView toHomeA(BaseSysUser user, HttpServletRequest request, HttpServletResponse response)throws Exception{
 		user = getUser();
 		ModelAndView modelAndView = new ModelAndView();
@@ -102,7 +101,6 @@ public class LoginController extends BaseController{
 	 */
 	@NoLogin
 	@RequestMapping(value="toLoginA")
-	@ResponseBody
 	public ModelAndView toLoginA(HttpServletRequest request, HttpServletResponse response)throws Exception{
 		ModelAndView modelAndView = new ModelAndView();	
 		BaseSysUser user = getUser();
