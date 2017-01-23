@@ -64,10 +64,65 @@ public class ShortcutsAction extends BaseController{
 		File file = null;
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.indexOf("win") >= 0) {
-			file = new File("e://webapp.zip");
+			file = new File("e://hunanFile//ceshi//webapp.zip");
 		}
 		else {
 			file = new File("/usr/cgw/myfile/webapp.zip");
+		}
+
+		OutputStream out = null;
+		InputStream inputStream = null;
+		response.setContentLength((int)file.length());
+		try {
+			inputStream = new FileInputStream(file);
+			out = response.getOutputStream();
+			byte[] buffer = new byte[1024];
+			int count = 0;
+			while ((count = inputStream.read(buffer)) != -1) {
+				out.write(buffer, 0, count);
+			}
+			out.close();
+			out.flush();
+		} catch (IOException e) {
+			logger.error("文件下载异常:{}", e);
+		} finally {
+			response.reset();
+			IOUtils.closeQuietly(inputStream);
+		}
+	}
+
+	@NoLogin
+	@RequestMapping("/downloadFZ")
+	public void downloadFZ(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+
+		String fileName = "webapp.zip";
+
+		//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+		response.setContentType("multipart/form-data");
+		//2.设置文件头
+		String userAgent = request.getHeader("User-Agent");
+		if (StringUtils.isBlank(userAgent)) {
+			fileName = URLEncoder.encode(fileName, "UTF-8");
+		} else {
+			if (userAgent.indexOf("MSIE") != -1) {
+				// IE使用URLEncoder
+				fileName = URLEncoder.encode(fileName, "UTF-8");
+			} else {
+				// FireFox使用ISO-8859-1
+				fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+			}
+		}
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+		response.setHeader("Pragma", "public");
+		response.setDateHeader("Expires", (System.currentTimeMillis() + 1000));
+		File file = null;
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("win") >= 0) {
+			file = new File("e://hunanFile//fangzhen//webapp.zip");
+		}
+		else {
+			file = new File("/usr/cgw/myfile/fangzhen/webapp.zip");
 		}
 
 		OutputStream out = null;
@@ -131,5 +186,10 @@ public class ShortcutsAction extends BaseController{
     public void logout() throws Exception {  
        exec("shutdown -L ");  
     }
+
+
+    //===========================================================    ToolFunction       =============================================//
+
+
 }
 

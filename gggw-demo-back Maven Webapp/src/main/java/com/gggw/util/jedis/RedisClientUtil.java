@@ -181,7 +181,6 @@ public class RedisClientUtil {
 	/**
 	 * 对value参数做toString处理，{@link #set(String, String, int)}
 	 * @see #set(String, String, int)
-	 * @author meijie
 	 * @param key
 	 * @param value
 	 * @param seconds
@@ -323,8 +322,6 @@ public class RedisClientUtil {
 	 * @param type
 	 * @param score
 	 * @param id
-	 *        开发人员: @author huadi<br>
-	 *        开发时间: 2015年10月14日<br>
 	 */
 	public static void addToRedisSetById(String type, Double score, String id) {
 		Pool<Jedis> pool = RedisClientUtil.getJedisPool();
@@ -345,8 +342,6 @@ public class RedisClientUtil {
 	 * 根据type将id从set集合中删除
 	 * @param type
 	 * @param id
-	 *        开发人员: @author huadi<br>
-	 *        开发时间: 2015年10月14日<br>
 	 */
 	public static void removeFromRedisSetById(String type, String id) {
 		Pool<Jedis> pool = RedisClientUtil.getJedisPool();
@@ -371,8 +366,6 @@ public class RedisClientUtil {
 	 * 根据类型获取所属的id集合
 	 * @param type
 	 * @return set<id>
-	 *         开发人员: @author huadi<br>
-	 *         开发时间: 2015年10月14日<br>
 	 */
 	public static Set<String> getSortedSet(String type) {
 		Set<String> userSet = null;
@@ -394,8 +387,6 @@ public class RedisClientUtil {
 	 * 根据类型获取Set总数
 	 * @param type
 	 * @return
-	 *         开发人员: @author huadi<br>
-	 *         开发时间: 2015年10月14日<br>
 	 */
 	public static int getSetCount(String type) {
 		int count = 0;
@@ -418,8 +409,6 @@ public class RedisClientUtil {
 	 * @param type
 	 * @param id
 	 * @return
-	 *         开发人员: @author huadi<br>
-	 *         开发时间: 2015年10月14日<br>
 	 */
 	public static Double getScoreById(String type, String id) {
 		Double score = null;
@@ -441,8 +430,6 @@ public class RedisClientUtil {
 	 * 根据样式查找
 	 * @param pattern
 	 * @return
-	 *         开发人员: @author huadi<br>
-	 *         开发时间: 2015年10月14日<br>
 	 */
 	public static List<String> getByPattern(String pattern) {
 		List<String> list = null;
@@ -468,8 +455,6 @@ public class RedisClientUtil {
 	 * @param max
 	 *        最大权重
 	 * @return
-	 *         开发人员: @author huadi<br>
-	 *         开发时间: 2015年10月14日<br>
 	 */
 	public static int getSetCountByScore(String type, double min, double max) {
 		Long count = 0L;
@@ -596,7 +581,6 @@ public class RedisClientUtil {
 	
 	/**
 	 * 读取redis，根据format参数返回Date
-	 * @author meijie
 	 * @param key 键
 	 * @param format 日期格式化字符串
 	 * @return 返回null，如果解析失败
@@ -608,7 +592,6 @@ public class RedisClientUtil {
 	
 	/**
 	 * 读取redis，解析数字并返回
-	 * @author meijie
 	 * @param key
 	 * @param defaultValue
 	 * @return 返回defaultValue，如果解析失败
