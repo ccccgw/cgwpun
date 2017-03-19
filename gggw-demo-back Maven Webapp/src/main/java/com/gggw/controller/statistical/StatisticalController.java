@@ -1,9 +1,13 @@
-package com.gggw.controller.system;
+package com.gggw.controller.statistical;
 
-import com.gggw.controller.base.BaseController;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.gggw.controller.base.BaseController;
 
 /**
  * ClassName:ShortcutsAction <br/>
@@ -12,15 +16,15 @@ import org.springframework.web.servlet.ModelAndView;
  * @author   cgw 
  */
 @Controller
-public class PictureController extends BaseController{
+public class StatisticalController extends BaseController{
 	
 	/**
-	 * 进入十月图片
+	 * 进入SQL统计页面
 	 */
-	@RequestMapping(value="toOctober")
+	@RequestMapping(value="toSQLStatistics")
 	public ModelAndView toSQLStatistics()throws Exception{
 		ModelAndView modelAndView = new ModelAndView();			
-		modelAndView.setViewName("ui/backend/picture/October");
+		modelAndView.setViewName("ui/backend/statistics/sqlStatisticsManager");
 		
 		return modelAndView;
 	}
