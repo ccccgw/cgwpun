@@ -11,6 +11,9 @@
 <script src="${contextPath }/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="${contextPath }/vendor/datatables/dataTables.bootstrap.min.js"></script>
 <script src="${contextPath }/vendor/datatables/dataTables.responsive.js"></script>
+<script src="${contextPath }/vendor/qiniu/moxie.js"></script>
+<script src="${contextPath }/vendor/qiniu/plupload.dev.js"></script>
+<script src="${contextPath }/vendor/qiniu/qiniu.js"></script>
 
 <script src="${contextPath }/vendor/js/validate.js"></script>
 
@@ -38,75 +41,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <form role="form" id="imgUploadForm">
-                                        <div class="form-group has-feedback">
-                                            <label>用户编号</label>
-                                            <input class="form-control" placeholder="请输入用户编号" name="userNo" id="userNo" valid="NotBlank" value="${baseSysUser.userNo}">
-                                            <span class="glyphicon  form-control-feedback"></span>
-                                            <span class="text-danger">（*必填项）</span>
-                                        </div>
-                                        <c:if test="${operatType == '0' }">
-                                        <div class="form-group has-feedback">
-                                            <label>密码</label>
-                                            <input type="password"   class="form-control" placeholder="请输入密码" name="userPwd" id="userPwd"  valid="NotBlank" value="">
-                                            <span class="glyphicon  form-control-feedback"></span>
-                                            <p class="text-danger">（*必填项）</p>
-                                        </div>
-                                        <div class="form-group has-feedback">
-                                            <label>重复密码</label>
-                                            <input type="password"  class="form-control" placeholder="请重复输入密码" name="reUserPwd" id="reUserPwd" valid="NotBlank">
-                                            <span class="glyphicon  form-control-feedback"></span>
-                                            <p class="text-danger">（*必填项）</p>
-                                        </div>
-                                        </c:if>
-                                        <div class="form-group has-feedback">
-                                            <label>姓名</label>
-                                            <input class="form-control" placeholder="请输入姓名" name="userName" id="userName"  valid="NotBlank" value="${baseSysUser.userName}">
-                                            <span class="glyphicon  form-control-feedback"></span>
-                                            <p class="text-danger">（*必填项）</p>
-                                        </div>
-                                        <div class="form-group" >
-                                            <label>性别</label>
-                                            <select class="form-control" name="gender" id="gender">
-                                                <c:forEach items="${genderList}" var="item">
-                                            		<option value="${item.subEntry}"  <c:if test="${item.subEntry == baseSysUser.gender }">selected</c:if> >${item.dictPrompt}</option>
-                                            	</c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="form-group has-feedback">
-                                            <label>手机号码</label>
-                                            <input class="form-control" placeholder="请输入手机号码" name="mobile" id="mobile"  valid="NotBlank" value="${baseSysUser.mobile}">
-                                        </div>
 
-                                        <div class="form-group has-feedback">
-                                            <label>邮箱</label>
-                                            <input class="form-control" placeholder="请输入邮箱" name="email" id="email"  valid="NotBlank" value="${baseSysUser.email}">
-                                            <span class="glyphicon  form-control-feedback"></span>
-                                            <p class="text-danger">（*必填项）</p>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>状态</label>
-                                            <select class="form-control" name="status" id="status">
-                                                <c:forEach items="${statusList}" var="item">
-                                            		<option value="${item.subEntry}" <c:if test="${item.subEntry == baseSysUser.status }">selected</c:if> >${item.dictPrompt}</option>
-                                            	</c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="form-group has-feedback" name="roleIds">
-                                            <div><label>请选择角色</label></div>
-                                            <c:forEach items="${roleList}" var="item">
-                                            	<label class="checkbox-inline">
-                                                	<input type="checkbox" name="roleId" value="${item.roleId}" <c:if test="${fn:contains(baseSysUser.roleId, item.roleId)}">checked</c:if>>${item.roleName}
-                                            	</label>
-                                            </c:forEach>
-                                        </div>
-
-										<div hidden>
-											<input name="operatType" value="${operatType}" >
-										</div>
-										
-										<div hidden>
-											<input name="userId" value="${baseSysUser.userId}" >
-										</div>
 
                                         <button type="button" class="btn btn-primary" id="commit">提   交</button>
                                         <button type="button" class="btn btn-default" onclick="toPage(this, '/upload/toImgUpload', '')">取   消</button>
@@ -128,44 +63,90 @@
 <!-- page-wrapper   end -->
 
 <script>
-	$("#commit").click(function() {
-		debugger;
-		
-		var email = $("#email").val();
-		var userPwd = $("#userPwd").val();
-		var reUserPwd = $("#reUserPwd").val();
 
-		if (!checkNotBlank($("#userForm"))) {
-			return;
-		}
+    $(function(){
+        debugger;
+    });
 
-		if (userPwd != reUserPwd) {
-			checkErrorHandle($("#reUserPwd"));
-			showError("两次密码输入不一致！");
-			return;
-		}
-
-		if (!(validateEmail(email) == "success")) {
-			checkErrorHandle($("#email"));
-			showError(validateEmail(email));
-			return;
-		}
-		debugger;
-		var url = "${contextPath }/ajaxUserEdit"
-		var params = $("#imgUploadForm").serializeArray();
-
-        $.ajax({
-           type : "post" ,
-           data : params,
-           url : url,
-           success: function(data) {
-               if (data.error_no == "0") {
-                   showError(data.error_info);
-               } else {
-                   showError(data.error_info);
-               }
-           }
-        });
-
-	});
+    var uploader = Qiniu.uploader({
+        runtimes: 'html5,flash,html4',      // 上传模式，依次退化
+        browse_button: 'commit',         // 上传选择的点选按钮，必需
+        // 在初始化时，uptoken，uptoken_url，uptoken_func三个参数中必须有一个被设置
+        // 切如果提供了多个，其优先级为uptoken > uptoken_url > uptoken_func
+        // 其中uptoken是直接提供上传凭证，uptoken_url是提供了获取上传凭证的地址，如果需要定制获取uptoken的过程则可以设置uptoken_func
+        // uptoken : '<Your upload token>', // uptoken是上传凭证，由其他程序生成
+        uptoken_url: '${contextPath }/upload/getToken?rnd=' + new Date().getTime() + '&bucketname=lqjh',         // Ajax请求uptoken的Url，强烈建议设置（服务端提供）
+        // uptoken_func: function(file){    // 在需要获取uptoken时，该方法会被调用
+        //    // do something
+        //    return uptoken;
+        // },
+        get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
+        // downtoken_url: '/downtoken',
+        // Ajax请求downToken的Url，私有空间时使用，JS-SDK将向该地址POST文件的key和domain，服务端返回的JSON必须包含url字段，url值为该文件的下载地址
+        unique_names: true,              // 默认false，key为文件名。若开启该选项，JS-SDK会为每个文件自动生成key（文件名）
+        // save_key: true,                  // 默认false。若在服务端生成uptoken的上传策略中指定了sava_key，则开启，SDK在前端将不对key进行任何处理
+        domain: 'http://omrcsua1r.bkt.clouddn.com',     // bucket域名，下载资源时用到，必需
+        container: 'imgUploadForm',             // 上传区域DOM ID，默认是browser_button的父元素
+        max_file_size: '100mb',             // 最大文件体积限制
+        //flash_swf_url: '/vendor/qiniu/Moxie.swf',  //引入flash，相对路径
+        max_retries: 3,                     // 上传失败最大重试次数
+        dragdrop: true,                     // 开启可拖曳上传
+        drop_element: 'imgUploadForm',          // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+        chunk_size: '4mb',                  // 分块上传时，每块的体积
+        auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+        //x_vars : {
+        //    查看自定义变量
+        //    'time' : function(up,file) {
+        //        var time = (new Date()).getTime();
+        // do something with 'time'
+        //        return time;
+        //    },
+        //    'size' : function(up,file) {
+        //        var size = file.size;
+        // do something with 'size'
+        //        return size;
+        //    }
+        //},
+        init: {
+            'FilesAdded': function(up, files) {
+                plupload.each(files, function(file) {
+                    // 文件添加进队列后，处理相关的事情
+                });
+            },
+            'BeforeUpload': function(up, file) {
+                // 每个文件上传前，处理相关的事情
+            },
+            'UploadProgress': function(up, file) {
+                // 每个文件上传时，处理相关的事情
+            },
+            'FileUploaded': function(up, file, info) {
+                // 每个文件上传成功后，处理相关的事情
+                // 其中info是文件上传成功后，服务端返回的json，形式如：
+                // {
+                //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
+                //    "key": "gogopher.jpg"
+                //  }
+                // 查看简单反馈
+                 var domain = up.getOption('domain');
+                 var res = JSON.parse(info);
+                 var sourceLink = domain +"/"+ res.key; //获取上传成功后的文件的Url
+                alert("上传成功: " + sourceLink);
+            },
+            'Error': function(up, err, errTip) {
+                //上传出错时，处理相关的事情
+            },
+            'UploadComplete': function() {
+                //队列文件处理完毕后，处理相关的事情
+            },
+            'Key': function(up, file) {
+                // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+                // 该配置必须要在unique_names: false，save_key: false时才生效
+                var key = "";
+                // do something with key here
+                return key
+            }
+        }
+    });
+    // domain为七牛空间对应的域名，选择某个空间后，可通过 空间设置->基本设置->域名设置 查看获取
+    // uploader为一个plupload对象，继承了所有plupload的方法
 </script>
